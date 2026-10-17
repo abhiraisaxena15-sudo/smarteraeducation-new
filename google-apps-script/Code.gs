@@ -11,7 +11,7 @@ const SHEET_NAME = 'Leads';
 const NOTIFY_EMAIL = 'info.smarteraeducation@gmail.com';
 
 const HEADERS = [
-  'Timestamp (IST)', 'Name', 'Phone', 'Email', 'Course', 'University', 'Mode', 'City',
+  'Timestamp (IST)', 'Name', 'Phone', 'Email', 'Course', 'University', 'Mode', 'City', 'State',
   'Service', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'UTM Content', 'UTM Term',
   'gclid', 'fbclid', 'Page', 'Status', 'Remarks',
 ];
@@ -42,6 +42,7 @@ function doPost(e) {
     clean_(p.university, 80),
     clean_(p.mode, 20),
     clean_(p.city, 60),
+    clean_(p.state, 60),
     clean_(p.service, 60),
     clean_(p.utm_source, 100),
     clean_(p.utm_medium, 100),
@@ -76,8 +77,9 @@ function doPost(e) {
           'University: ' + row[5],
           'Mode: ' + row[6],
           'City: ' + row[7],
-          'Service: ' + row[8],
-          'Source: ' + [row[9], row[10], row[11]].filter(String).join(' / '),
+          'State: ' + row[8],
+          'Service: ' + row[9],
+          'Source: ' + [row[10], row[11], row[12]].filter(String).join(' / '),
           '',
           'Call: tel:+91' + phone,
           'WhatsApp: https://wa.me/91' + phone,
@@ -102,6 +104,17 @@ function getSheet_() {
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
   }
+  // Purani sheet mein 'State' column nahi hai toh City ke baad add kar do
+  if (sheet.getLastRow() > 0) {
+    const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (header.indexOf('State') === -1) {
+      const cityCol = header.indexOf('City') + 1;
+      if (cityCol > 0) {
+        sheet.insertColumnAfter(cityCol);
+        sheet.getRange(1, cityCol + 1).setValue('State');
+      }
+    }
+  }
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
@@ -123,5 +136,5 @@ function json_(obj) {
 
 /** Setup ke baad ek baar Run karo — permission dene ke liye aur test row daalne ke liye */
 function testSetup() {
-  doPost({ parameter: { name: 'Test Lead', phone: '9999999999', course: 'MBA', city: 'Noida', page: 'manual test' } });
+  doPost({ parameter: { name: 'Test Lead', phone: '9999999999', course: 'MBA', city: 'Noida', state: 'Uttar Pradesh', page: 'manual test' } });
 }

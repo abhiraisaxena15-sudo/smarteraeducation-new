@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Phone, Mail, MapPin, CheckCircle2, Loader2, MessageCircle, X, AlertTriangle } from 'lucide-react';
-import { site, courses, universities, fullAddress, whatsappLink } from '../data/site';
+import { Send, Phone, Mail, MapPin, CheckCircle2, Loader2, X, AlertTriangle } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
+import { site, courses, fullAddress, whatsappLink } from '../data/site';
+import { states, statesAndCities, OTHER_CITY } from '../data/locations';
 import { PREFILL_EVENT, type PrefillDetail } from '../lib/prefill';
 import { captureUtm, leadWhatsappText, submitLead, validateLead, type LeadData } from '../lib/leads';
 
@@ -13,6 +15,8 @@ const emptyForm: LeadData = {
   university: '',
   mode: '',
   city: '',
+  cityOther: '',
+  state: '',
   service: '',
   website: '',
 };
@@ -58,6 +62,15 @@ export default function LeadForm() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof LeadData]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  const cityOptions = formData.state ? statesAndCities[formData.state] ?? [] : [];
+
+  // State badalne par city reset karo
+  const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const state = e.target.value;
+    setFormData((prev) => ({ ...prev, state, city: '', cityOther: '' }));
+    setErrors((prev) => ({ ...prev, state: undefined, city: undefined, cityOther: undefined }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,9 +130,9 @@ export default function LeadForm() {
                 href={whatsappLink()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-[#25D366] rounded-xl hover:bg-[#1ebe5a] transition-colors"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4" />
                 Chat on WhatsApp
               </a>
               <button
@@ -176,7 +189,7 @@ export default function LeadForm() {
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <MessageCircle className="w-5 h-5 text-navy-300" />
+                  <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
                 </div>
                 <div>
                   <p className="text-sm text-white/50">WhatsApp</p>
@@ -225,6 +238,20 @@ export default function LeadForm() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl">
               <h3 className="text-2xl font-bold text-navy-900 mb-2">Get Free Counselling</h3>
               <p className="text-slate-500 mb-6">Our experts will reach out within 24 hours</p>
+
+              {formData.university && (
+                <div className="mb-5 mr-2 inline-flex items-center gap-2 pl-3 pr-1 py-1 rounded-full bg-navy-50 border border-navy-100 text-sm text-navy-700">
+                  University: <span className="font-semibold">{formData.university}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData((p) => ({ ...p, university: '' }))}
+                    aria-label="Remove university"
+                    className="w-6 h-6 rounded-full hover:bg-navy-100 flex items-center justify-center"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
 
               {formData.service && (
                 <div className="mb-5 inline-flex items-center gap-2 pl-3 pr-1 py-1 rounded-full bg-navy-50 border border-navy-100 text-sm text-navy-700">
@@ -326,40 +353,6 @@ export default function LeadForm() {
                     <FieldError id="lf-course-err" msg={errors.course} />
                   </div>
                   <div>
-                    <label htmlFor="lf-city" className="block text-sm font-medium text-slate-700 mb-1.5">City *</label>
-                    <input
-                      id="lf-city"
-                      type="text"
-                      name="city"
-                      autoComplete="address-level2"
-                      maxLength={60}
-                      value={formData.city}
-                      onChange={handleChange}
-                      placeholder="Your city"
-                      aria-invalid={!!errors.city}
-                      aria-describedby={errors.city ? 'lf-city-err' : undefined}
-                      className={inputCls(errors.city)}
-                    />
-                    <FieldError id="lf-city-err" msg={errors.city} />
-                  </div>
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="lf-university" className="block text-sm font-medium text-slate-700 mb-1.5">Preferred University</label>
-                    <select
-                      id="lf-university"
-                      name="university"
-                      value={formData.university}
-                      onChange={handleChange}
-                      className={`${inputCls()} bg-white`}
-                    >
-                      <option value="">Not sure yet</option>
-                      {universities.map((u) => (
-                        <option key={u.name} value={u.name}>{u.name}</option>
-                      ))}
-                    </select>
-                  </div>
                   <fieldset>
                     <legend className="block text-sm font-medium text-slate-700 mb-1.5">Study Mode</legend>
                     <div className="grid grid-cols-2 gap-2">
@@ -385,7 +378,70 @@ export default function LeadForm() {
                       ))}
                     </div>
                   </fieldset>
+                  </div>
                 </div>
+
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="lf-state" className="block text-sm font-medium text-slate-700 mb-1.5">State *</label>
+                    <select
+                      id="lf-state"
+                      name="state"
+                      autoComplete="address-level1"
+                      value={formData.state}
+                      onChange={handleStateChange}
+                      aria-invalid={!!errors.state}
+                      aria-describedby={errors.state ? 'lf-state-err' : undefined}
+                      className={`${inputCls(errors.state)} bg-white`}
+                    >
+                      <option value="">Select State</option>
+                      {states.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                    <FieldError id="lf-state-err" msg={errors.state} />
+                  </div>
+                  <div>
+                    <label htmlFor="lf-city" className="block text-sm font-medium text-slate-700 mb-1.5">City *</label>
+                    <select
+                      id="lf-city"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      disabled={!formData.state}
+                      aria-invalid={!!errors.city}
+                      aria-describedby={errors.city ? 'lf-city-err' : undefined}
+                      className={`${inputCls(errors.city)} bg-white disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed`}
+                    >
+                      <option value="">{formData.state ? 'Select City' : 'Select State first'}</option>
+                      {cityOptions.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                      {formData.state && <option value={OTHER_CITY}>Other (type your city)</option>}
+                    </select>
+                    <FieldError id="lf-city-err" msg={errors.city} />
+                  </div>
+                </div>
+
+                {formData.city === OTHER_CITY && (
+                  <div>
+                    <label htmlFor="lf-cityOther" className="block text-sm font-medium text-slate-700 mb-1.5">Your City *</label>
+                    <input
+                      id="lf-cityOther"
+                      type="text"
+                      name="cityOther"
+                      autoComplete="address-level2"
+                      maxLength={60}
+                      value={formData.cityOther}
+                      onChange={handleChange}
+                      placeholder="Type your city / town"
+                      aria-invalid={!!errors.cityOther}
+                      aria-describedby={errors.cityOther ? 'lf-cityOther-err' : undefined}
+                      className={inputCls(errors.cityOther)}
+                    />
+                    <FieldError id="lf-cityOther-err" msg={errors.cityOther} />
+                  </div>
+                )}
 
                 {submitError && (
                   <div role="alert" className="flex gap-3 p-4 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-800">

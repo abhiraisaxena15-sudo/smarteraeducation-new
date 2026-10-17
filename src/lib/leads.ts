@@ -8,6 +8,9 @@ export interface LeadData {
   university: string;
   mode: string;
   city: string;
+  /** jab city dropdown mein 'Other' chuna ho */
+  cityOther: string;
+  state: string;
   service: string;
   /** honeypot — insaan ise kabhi nahi bharta, bots bharte hain */
   website: string;
@@ -21,13 +24,20 @@ export function normalizePhone(raw: string) {
   return d;
 }
 
+/** Dropdown ya 'Other' wali city */
+export function finalCity(data: LeadData) {
+  return (data.city === 'Other' ? data.cityOther : data.city).trim();
+}
+
 export function validateLead(data: LeadData) {
   const errors: Partial<Record<keyof LeadData, string>> = {};
   if (data.name.trim().replace(/[^\p{L}]/gu, '').length < 2) errors.name = 'Please enter your full name';
   if (!/^[6-9]\d{9}$/.test(normalizePhone(data.phone))) errors.phone = 'Enter a valid 10-digit mobile number';
   if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) errors.email = 'Enter a valid email or leave it blank';
   if (!data.course) errors.course = 'Please select a course';
-  if (data.city.trim().length < 2) errors.city = 'Please enter your city';
+  if (!data.state) errors.state = 'Please select your state';
+  if (!data.city) errors.city = 'Please select your city';
+  else if (data.city === 'Other' && data.cityOther.trim().length < 2) errors.cityOther = 'Please type your city';
   return errors;
 }
 
@@ -69,7 +79,8 @@ export async function submitLead(data: LeadData): Promise<SubmitResult> {
     course: data.course,
     university: data.university,
     mode: data.mode,
-    city: data.city.trim(),
+    city: finalCity(data),
+    state: data.state,
     service: data.service,
     website: data.website,
     page: window.location.href.slice(0, 300),
@@ -95,7 +106,7 @@ export function leadWhatsappText(data: LeadData) {
     `Course: ${data.course}`,
     data.university && `University: ${data.university}`,
     data.mode && `Mode: ${data.mode}`,
-    `City: ${data.city.trim()}`,
+    `City: ${finalCity(data)}, ${data.state}`,
   ].filter(Boolean);
   return lines.join('\n');
 }

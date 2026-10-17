@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Send, User, Sparkles, MessageCircle } from 'lucide-react';
+import { Bot, X, Send, User, Sparkles } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { whatsappLink } from '../data/site';
 import { getBotReply, quickQuestions } from '../lib/chatbot';
 
@@ -146,7 +147,7 @@ export default function ChatBot() {
                 rel="noopener noreferrer"
                 className="mt-2 flex items-center justify-center gap-2 py-2 text-xs font-semibold text-green-700 hover:underline"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
                 Talk to a counsellor on WhatsApp
               </a>
             </div>

@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { whatsappLink } from '../data/site';
 
 export default function WhatsAppButton() {
@@ -12,10 +12,10 @@ export default function WhatsAppButton() {
     >
       <div className="relative">
         {/* Pulse ring */}
-        <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20" />
+        <div className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
         {/* Button */}
-        <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all hover:scale-110">
-          <MessageCircle className="w-7 h-7 text-white" />
+        <div className="relative w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all hover:scale-110">
+          <WhatsAppIcon className="w-8 h-8 text-white" />
         </div>
         {/* Tooltip */}
         <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap">

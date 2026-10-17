@@ -1,4 +1,5 @@
-import { GraduationCap, Phone, Mail, MapPin, Instagram, MessageCircle, ArrowUp } from 'lucide-react';
+import { GraduationCap, Phone, Mail, MapPin, Instagram, ArrowUp } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { site, whatsappLink } from '../data/site';
 
 const quickLinks = [
@@ -52,7 +53,7 @@ export default function Footer() {
             <div className="flex gap-3">
               {[
                 { icon: Instagram, href: site.instagram, label: 'Smart Era Education on Instagram' },
-                { icon: MessageCircle, href: whatsappLink(), label: 'Chat on WhatsApp' },
+                { icon: WhatsAppIcon, href: whatsappLink(), label: 'Chat on WhatsApp' },
               ].map((social) => (
                 <a
                   key={social.label}
