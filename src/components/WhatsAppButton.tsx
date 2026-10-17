@@ -1,9 +1,11 @@
 import { MessageCircle } from 'lucide-react';
+import { whatsappLink } from '../data/site';
 
 export default function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/918755999764?text=Hi%20Smart%20Era%20Education,%20I%20want%20to%20know%20more%20about%20university%20admissions"
+      href={whatsappLink()}
+      aria-label="Chat with Smart Era Education on WhatsApp"
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 group"

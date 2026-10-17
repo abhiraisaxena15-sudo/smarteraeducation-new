@@ -1,48 +1,62 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ChevronLeft, ChevronRight, Quote, MessageSquare } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Quote, MessageSquare, Instagram, ArrowRight } from 'lucide-react';
+import { testimonials } from '../data/testimonials';
+import { site } from '../data/site';
 
-const testimonials = [
-  {
-    name: 'Rahul Sharma',
-    course: 'MBA',
-    university: 'Lovely Professional University',
-    image: '/images/student-rahul.jpg',
-    review: 'Smart Era Education made my MBA admission process incredibly smooth. Their counsellors helped me choose the right specialization and even secured a 30% scholarship. I could not have done it without their expert guidance!',
-    rating: 5,
-    location: 'Delhi',
-  },
-  {
-    name: 'Priya Verma',
-    course: 'B.Tech Computer Science',
-    university: 'Chandigarh University',
-    image: '/images/student-priya.jpg',
-    review: 'I was confused about which university to choose for B.Tech. The team at Smart Era patiently explained all options and helped me get into Chandigarh University with a merit scholarship. Truly grateful for their support!',
-    rating: 5,
-    location: 'Lucknow',
-  },
-  {
-    name: 'Aman Gupta',
-    course: 'BCA',
-    university: 'Amity University',
-    image: '/images/student-aman.jpg',
-    review: 'From application to admission, every step was handled professionally. They even assisted with my education loan paperwork. Got admission to Amity University Noida within 2 weeks of contacting them. Highly recommended!',
-    rating: 5,
-    location: 'Jaipur',
-  },
-  {
-    name: 'Sneha Kapoor',
-    course: 'MCA',
-    university: 'Manipal University Jaipur',
-    image: '/images/student-sneha.jpg',
-    review: 'The personalized counselling sessions were a game-changer. They understood my career goals and matched me with the perfect MCA program at Manipal University. The admission process was hassle-free and fast!',
-    rating: 5,
-    location: 'Mumbai',
-  },
-];
+function initials(name: string) {
+  return name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase();
+}
+
+function Avatar({ name, image, size }: { name: string; image?: string; size: 'lg' | 'sm' }) {
+  const cls = size === 'lg' ? 'w-16 h-16 rounded-2xl text-lg' : 'w-10 h-10 rounded-xl text-xs';
+  if (image) return <img src={image} alt={name} loading="lazy" className={`${cls} object-cover shadow-lg`} />;
+  return (
+    <div className={`${cls} bg-gradient-to-br from-navy-500 to-navy-700 text-white font-bold flex items-center justify-center`}>
+      {initials(name)}
+    </div>
+  );
+}
+
+function InstagramStories() {
+  return (
+    <section id="testimonials" className="py-16 md:py-20 bg-slate-50">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-white border border-slate-100 shadow-xl shadow-slate-200/50 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-fuchsia-500 via-rose-500 to-amber-400 flex items-center justify-center shadow-lg flex-shrink-0">
+            <Instagram className="w-10 h-10 text-white" />
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-50 border border-navy-100 mb-3">
+              <MessageSquare className="w-3.5 h-3.5 text-navy-600" />
+              <span className="text-xs font-semibold text-navy-700">Student Stories</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+              See our students' journeys on Instagram
+            </h2>
+            <p className="text-slate-500">Admission updates, campus visits and student stories — follow @smartera_education.</p>
+          </div>
+          <a
+            href={site.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-shine inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-navy-800 to-navy-600 rounded-xl shadow-lg shadow-navy-500/25 flex-shrink-0"
+          >
+            Follow on Instagram
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 
 export default function Testimonials() {
   const [current, setCurrent] = useState(0);
+
+  if (testimonials.length === 0) return <InstagramStories />;
 
   const next = () => setCurrent((c) => (c + 1) % testimonials.length);
   const prev = () => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
@@ -66,7 +80,7 @@ export default function Testimonials() {
             What Our Students Say
           </h2>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Real stories from real students who achieved their academic dreams with our guidance.
+            Reviews from students we have guided.
           </p>
         </motion.div>
 
@@ -87,17 +101,15 @@ export default function Testimonials() {
               </p>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <img
-                    src={testimonials[current].image}
-                    alt={testimonials[current].name}
-                    className="w-16 h-16 rounded-2xl object-cover shadow-lg"
-                  />
+                  <Avatar name={testimonials[current].name} image={testimonials[current].image} size="lg" />
                   <div>
                     <h4 className="text-lg font-bold text-navy-900">{testimonials[current].name}</h4>
                     <p className="text-sm text-slate-500">
                       {testimonials[current].course} • {testimonials[current].university}
                     </p>
-                    <p className="text-xs text-slate-400 mt-0.5">{testimonials[current].location}</p>
+                    {testimonials[current].location && (
+                      <p className="text-xs text-slate-400 mt-0.5">{testimonials[current].location}</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-1">
@@ -113,6 +125,7 @@ export default function Testimonials() {
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={prev}
+              aria-label="Previous review"
               className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-navy-50 hover:border-navy-300 transition-colors shadow-sm"
             >
               <ChevronLeft className="w-5 h-5 text-navy-700" />
@@ -122,6 +135,7 @@ export default function Testimonials() {
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
+                  aria-label={`Show review ${i + 1}`}
                   className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                     i === current ? 'bg-navy-600 w-8' : 'bg-slate-300 hover:bg-slate-400'
                   }`}
@@ -130,6 +144,7 @@ export default function Testimonials() {
             </div>
             <button
               onClick={next}
+              aria-label="Next review"
               className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-navy-50 hover:border-navy-300 transition-colors shadow-sm"
             >
               <ChevronRight className="w-5 h-5 text-navy-700" />
@@ -154,7 +169,7 @@ export default function Testimonials() {
               }`}
             >
               <div className="flex items-center gap-3 mb-3">
-                <img src={t.image} alt={t.name} className="w-10 h-10 rounded-xl object-cover" />
+                <Avatar name={t.name} image={t.image} size="sm" />
                 <div>
                   <h4 className="text-sm font-semibold text-navy-900">{t.name}</h4>
                   <p className="text-xs text-slate-500">{t.course}</p>

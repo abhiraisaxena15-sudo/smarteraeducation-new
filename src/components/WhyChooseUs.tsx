@@ -1,29 +1,30 @@
 import { motion } from 'framer-motion';
 import { ShieldCheck, UserCheck, Zap, HeartHandshake, Target, Lightbulb, CheckCircle2 } from 'lucide-react';
+import { site } from '../data/site';
 
 const features = [
   {
     icon: ShieldCheck,
     title: 'Verified Universities',
-    description: 'All our partner universities are UGC-approved and NAAC-accredited institutions with proven track records.',
+    description: 'We recommend only UGC-recognised universities and check a program’s approvals before you apply — so your degree holds its value.',
     color: 'bg-blue-50 text-blue-600',
   },
   {
     icon: UserCheck,
     title: 'Expert Counsellors',
-    description: 'Our team consists of certified education counsellors with 10+ years of experience in university admissions.',
+    description: 'Our counsellors have guided 5,000+ students and know the admission process, eligibility and fee structure of each partner university.',
     color: 'bg-violet-50 text-violet-600',
   },
   {
     icon: Zap,
     title: 'Fast Admission Process',
-    description: 'We streamline the entire admission journey, reducing processing time by up to 60% compared to self-applications.',
+    description: 'We handle forms, documents and follow-ups with the university — making your admission up to 60% faster than applying on your own.',
     color: 'bg-amber-50 text-amber-600',
   },
   {
     icon: HeartHandshake,
-    title: 'Affordable Guidance',
-    description: 'Transparent pricing with no hidden costs. Our counselling fees are among the most competitive in the industry.',
+    title: '100% Free Counselling',
+    description: 'Our counselling is completely free — no charges, no hidden fees. Get honest guidance before you commit to any university.',
     color: 'bg-emerald-50 text-emerald-600',
   },
   {
@@ -41,12 +42,12 @@ const features = [
 ];
 
 const trustBadges = [
-  'UGC Approved Universities',
-  'NAAC Accredited Partners',
-  'ISO 9001:2015 Certified',
-  '10+ Years Experience',
-  '5000+ Google Reviews',
-  'PAN India Presence',
+  `${site.studentsGuided.toLocaleString('en-IN')}+ Students Guided`,
+  `${site.universitiesCount}+ Partner Universities`,
+  `${site.successRate}% Admission Success Rate`,
+  'Up to 60% Faster Admissions',
+  '100% Free Counselling',
+  'Call & WhatsApp Support',
 ];
 
 export default function WhyChooseUs() {
@@ -69,9 +70,9 @@ export default function WhyChooseUs() {
               The Smart Era Advantage
             </h2>
             <p className="text-lg text-slate-500 mb-8 leading-relaxed">
-              We combine industry expertise, technology, and a student-first approach to deliver 
-              unmatched admission consultancy services. Our commitment to transparency and excellence 
-              has made us one of India's most trusted education partners.
+              We take a student-first approach: understand your marks, budget and career goals,
+              then shortlist the universities and programs that genuinely fit — and stay with you
+              until your admission is confirmed.
             </p>
 
             {/* Trust Badges */}

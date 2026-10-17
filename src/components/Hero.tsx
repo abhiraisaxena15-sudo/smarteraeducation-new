@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, CheckCircle2, Users, Award, Shield } from 'lucide-react';
+import { ArrowRight, PhoneCall, CheckCircle2, Users, Award, TrendingUp, Phone, BadgeCheck } from 'lucide-react';
+import { site, primaryPhone } from '../data/site';
 
 const stats = [
-  { icon: Users, label: 'Students Guided', value: '10,000+' },
-  { icon: Award, label: 'Partner Institutes', value: '150+' },
-  { icon: Shield, label: 'Success Rate', value: '95%' },
+  { icon: Users, label: 'Students Guided', value: `${site.studentsGuided.toLocaleString('en-IN')}+` },
+  { icon: Award, label: 'Partner Universities', value: `${site.universitiesCount}+` },
+  { icon: TrendingUp, label: 'Admission Success Rate', value: `${site.successRate}%` },
 ];
 
 export default function Hero() {
@@ -13,8 +14,11 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="/images/hero-bg.jpg"
-          alt="Students celebrating success"
+          src="/images/hero-bg.webp"
+          alt="Graduates celebrating their university admission success"
+          width={1376}
+          height={768}
+          fetchPriority="high"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-900/85 to-navy-800/70" />
@@ -51,7 +55,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
             >
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-sm font-medium text-white/90">Admissions Open for 2025-26</span>
+              <span className="text-sm font-medium text-white/90">Admissions Open for {site.admissionIntake} Intake</span>
             </motion.div>
 
             <motion.h1
@@ -71,10 +75,21 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg text-white/70 max-w-xl leading-relaxed"
             >
-              Get expert guidance for admissions to India's top universities. 
-              We help you choose the right course, secure scholarships, and 
-              navigate the admission process with confidence.
+              Expert admission guidance for regular and online degrees at India's leading
+              universities — from choosing the right course to scholarships and final enrolment.
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-green-500/15 border border-green-400/40"
+            >
+              <BadgeCheck className="w-6 h-6 text-green-400 flex-shrink-0" />
+              <span className="text-white font-semibold">
+                100% Free Counselling <span className="font-normal text-white/70">— no charges, no hidden fees</span>
+              </span>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -83,17 +98,17 @@ export default function Hero() {
               className="flex flex-wrap gap-4"
             >
               <a
-                href="#contact"
+                href="/#contact"
                 className="btn-shine group inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-navy-900 bg-white rounded-2xl hover:bg-navy-50 transition-all shadow-xl shadow-black/20"
               >
                 Apply Now
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="#contact"
+                href="/#contact"
                 className="group inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-white border-2 border-white/30 rounded-2xl hover:bg-white/10 transition-all"
               >
-                <Play className="w-5 h-5" />
+                <PhoneCall className="w-5 h-5" />
                 Free Counselling
               </a>
             </motion.div>
@@ -106,8 +121,8 @@ export default function Hero() {
             >
               {[
                 'Expert Counsellors',
-                '100% Verified Universities',
-                'Scholarship Assistance',
+                'UGC-recognised Universities',
+                'Up to 60% Faster Admissions',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-sm text-white/60">
                   <CheckCircle2 className="w-4 h-4 text-green-400" />
@@ -115,6 +130,16 @@ export default function Hero() {
                 </div>
               ))}
             </motion.div>
+
+            {/* Mobile stats (right card is desktop-only) */}
+            <div className="grid grid-cols-3 gap-3 lg:hidden">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl bg-white/10 border border-white/15 px-3 py-3 text-center">
+                  <div className="text-base sm:text-lg font-bold text-white leading-tight">{stat.value}</div>
+                  <div className="text-[11px] text-white/60 mt-1 leading-tight">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right Stats Card */}
@@ -144,21 +169,15 @@ export default function Hero() {
                 </motion.div>
               ))}
               <div className="pt-4 border-t border-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-gradient-to-br from-navy-300 to-navy-500 border-2 border-navy-800 flex items-center justify-center text-[10px] font-bold text-white"
-                      >
-                        {String.fromCharCode(64 + i)}
-                      </div>
-                    ))}
+                <a href={`tel:${primaryPhone.tel}`} className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Phone className="w-5 h-5 text-green-400" />
                   </div>
                   <p className="text-sm text-white/70">
-                    <span className="font-semibold text-white">2,500+</span> students enrolled this year
+                    Talk to a counsellor{' '}
+                    <span className="block font-semibold text-white group-hover:underline">{primaryPhone.display}</span>
                   </p>
-                </div>
+                </a>
               </div>
             </div>
           </motion.div>

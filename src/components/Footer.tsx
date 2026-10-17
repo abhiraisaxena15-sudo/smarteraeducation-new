@@ -1,12 +1,13 @@
-import { GraduationCap, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, ArrowUp } from 'lucide-react';
+import { GraduationCap, Phone, Mail, MapPin, Instagram, MessageCircle, ArrowUp } from 'lucide-react';
+import { site, whatsappLink } from '../data/site';
 
 const quickLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'Universities', href: '#universities' },
-  { name: 'Services', href: '#services' },
-  { name: 'Testimonials', href: '#testimonials' },
-  { name: 'Why Choose Us', href: '#why-us' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/#home' },
+  { name: 'Universities', href: '/#universities' },
+  { name: 'Services', href: '/#services' },
+  { name: 'Why Choose Us', href: '/#why-us' },
+  { name: 'FAQ', href: '/#faq' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
 const services = [
@@ -15,14 +16,12 @@ const services = [
   'Scholarship Assistance',
   'Education Loan Support',
   'Online Degree Admissions',
-  'Study Abroad Guidance',
 ];
 
 const legal = [
-  { name: 'Privacy Policy', href: '#' },
-  { name: 'Terms of Service', href: '#' },
-  { name: 'Refund Policy', href: '#' },
-  { name: 'Disclaimer', href: '#' },
+  { name: 'Privacy Policy', href: '/privacy-policy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Disclaimer', href: '/disclaimer' },
 ];
 
 export default function Footer() {
@@ -37,7 +36,7 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {/* Brand Column */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <a href="#home" className="flex items-center gap-2.5 mb-5">
+            <a href="/#home" className="flex items-center gap-2.5 mb-5" aria-label="Smart Era Education home">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-navy-600 to-navy-400 flex items-center justify-center">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
@@ -47,19 +46,20 @@ export default function Footer() {
               </div>
             </a>
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
-              India's most trusted education consultancy helping students achieve their academic dreams 
-              through expert guidance and verified university partnerships.
+              Admission guidance for regular and online degrees at India's leading universities —
+              helping {site.studentsGuided.toLocaleString('en-IN')}+ students choose the right course and university.
             </p>
             <div className="flex gap-3">
               {[
-                { icon: Facebook, href: '#' },
-                { icon: Instagram, href: '#' },
-                { icon: Linkedin, href: '#' },
-                { icon: Youtube, href: '#' },
-              ].map((social, i) => (
+                { icon: Instagram, href: site.instagram, label: 'Smart Era Education on Instagram' },
+                { icon: MessageCircle, href: whatsappLink(), label: 'Chat on WhatsApp' },
+              ].map((social) => (
                 <a
-                  key={i}
+                  key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
                   className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-navy-600 transition-colors"
                 >
                   <social.icon className="w-4 h-4 text-slate-300" />
@@ -88,7 +88,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service}>
-                  <span className="text-sm text-slate-400">{service}</span>
+                  <a href="/#services" className="text-sm text-slate-400 hover:text-white transition-colors">{service}</a>
                 </li>
               ))}
             </ul>
@@ -101,19 +101,23 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-navy-400 mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-slate-400">
-                  B-42, Sector 62, Noida,<br />Uttar Pradesh - 201301
+                  {site.address.street}, {site.address.city},<br />{site.address.state} - {site.address.pincode}
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-navy-400 mt-0.5 flex-shrink-0" />
+                <span className="flex flex-col gap-1">
+                  {site.phones.map((p) => (
+                    <a key={p.tel} href={`tel:${p.tel}`} className="text-sm text-slate-400 hover:text-white transition-colors">
+                      {p.display}
+                    </a>
+                  ))}
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-navy-400 flex-shrink-0" />
-                <a href="tel:+918755999764" className="text-sm text-slate-400 hover:text-white transition-colors">
-                  +91 87559 99764
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-navy-400 flex-shrink-0" />
-                <a href="mailto:info@smarteraeducation.com" className="text-sm text-slate-400 hover:text-white transition-colors">
-                  info@smarteraeducation.com
+                <a href={`mailto:${site.email}`} className="text-sm text-slate-400 hover:text-white transition-colors break-all">
+                  {site.email}
                 </a>
               </li>
             </ul>
@@ -123,7 +127,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-24">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-slate-500">
               &copy; {new Date().getFullYear()} Smart Era Education. All rights reserved.
@@ -137,6 +141,7 @@ export default function Footer() {
             </div>
             <button
               onClick={scrollToTop}
+              aria-label="Back to top"
               className="w-10 h-10 rounded-xl bg-navy-800 flex items-center justify-center hover:bg-navy-700 transition-colors"
             >
               <ArrowUp className="w-4 h-4 text-slate-300" />

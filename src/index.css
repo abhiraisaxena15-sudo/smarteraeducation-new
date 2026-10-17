@@ -20,6 +20,16 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Fixed navbar ke neeche heading na chhupe */
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker-content, .animate-float, .animate-pulse-glow { animation: none; }
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
   color: #0f172a;

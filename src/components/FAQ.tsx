@@ -1,47 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-const faqs = [
-  {
-    question: 'How does Smart Era Education help with university admissions?',
-    answer: 'We provide end-to-end admission support including university shortlisting, application filling, document verification, entrance exam guidance, interview preparation, and final admission confirmation. Our counsellors work closely with you to understand your profile and match you with the best-fit universities.',
-  },
-  {
-    question: 'Are your partner universities UGC-approved?',
-    answer: 'Yes, all our partner universities including LPU, Amity, Chandigarh University, Manipal, and others are UGC-approved and NAAC-accredited institutions. We only work with verified and recognized universities to ensure the value of your degree.',
-  },
-  {
-    question: 'Do you charge for counselling sessions?',
-    answer: 'Your first counselling session is completely free. We believe in understanding your needs before any commitment. Our service fees are transparent and among the most competitive in the industry, with no hidden charges.',
-  },
-  {
-    question: 'Can you help with scholarship applications?',
-    answer: 'Absolutely! We have dedicated scholarship counsellors who help identify merit-based and need-based scholarship opportunities. We assist with scholarship application preparation and documentation to maximize your chances of receiving financial aid.',
-  },
-  {
-    question: 'What is the typical admission timeline?',
-    answer: 'The admission timeline varies by university and program. Generally, UG admissions take 2-4 weeks and PG admissions take 3-6 weeks from application to confirmation. We keep you updated at every step and expedite the process wherever possible.',
-  },
-  {
-    question: 'Do you provide education loan assistance?',
-    answer: 'Yes, we partner with leading banks and NBFCs to help students secure education loans at competitive interest rates. Our team assists with loan application documentation, eligibility assessment, and lender coordination.',
-  },
-  {
-    question: 'Is online degree admission support available?',
-    answer: 'Yes, we provide complete support for UGC-approved online degree programs from top Indian universities. These programs offer flexibility for working professionals and students who prefer remote learning.',
-  },
-  {
-    question: 'What documents are required for admission?',
-    answer: 'Typically required documents include: 10th and 12th mark sheets, graduation mark sheets (for PG), ID proof (Aadhaar/PAN), passport-size photographs, transfer certificate, and category certificate (if applicable). Specific requirements may vary by university.',
-  },
-];
+import { faqs } from '../data/faqs';
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-20 md:py-28 bg-slate-50">
+    <section id="faq" className="py-20 md:py-28 bg-slate-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -76,9 +42,10 @@ export default function FAQ() {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                aria-expanded={openIndex === i}
                 className="w-full flex items-center justify-between p-5 md:p-6 text-left hover:bg-slate-50 transition-colors"
               >
-                <span className="text-base md:text-lg font-semibold text-navy-900 pr-4">{faq.question}</span>
+                <h3 className="text-base md:text-lg font-semibold text-navy-900 pr-4">{faq.question}</h3>
                 <motion.div
                   animate={{ rotate: openIndex === i ? 180 : 0 }}
                   transition={{ duration: 0.2 }}

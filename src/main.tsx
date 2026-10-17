@@ -1,10 +1,18 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root')!
+const app = (
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <App path={window.location.pathname} />
+  </StrictMode>
 )
+
+// Build ke time pe page pehle se HTML mein render hota hai (SEO ke liye) — usko hydrate karo
+if (root.firstElementChild) {
+  hydrateRoot(root, app)
+} else {
+  createRoot(root).render(app)
+}

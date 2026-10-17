@@ -1,25 +1,28 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, GraduationCap, Phone } from 'lucide-react';
+import { primaryPhone } from '../data/site';
 
 const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'Universities', href: '#universities' },
-  { name: 'Services', href: '#services' },
-  { name: 'Testimonials', href: '#testimonials' },
-  { name: 'Why Us', href: '#why-us' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/#home' },
+  { name: 'Universities', href: '/#universities' },
+  { name: 'Services', href: '/#services' },
+  { name: 'Why Us', href: '/#why-us' },
+  { name: 'FAQ', href: '/#faq' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
-export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+export default function Navbar({ solid = false }: { solid?: boolean }) {
+  const [scrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isScrolled = solid || scrolled || isMobileMenuOpen;
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -38,13 +41,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 md:h-20">
             {/* Logo */}
-            <a href="#home" className="flex items-center gap-2.5 group">
+            <a href="/#home" aria-label="Smart Era Education home" className="flex items-center gap-2.5 group">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-navy-800 to-navy-600 flex items-center justify-center shadow-lg group-hover:shadow-navy-500/30 transition-shadow">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-navy-900 leading-tight">Smart Era</span>
-                <span className="text-[10px] font-semibold text-navy-500 tracking-widest uppercase leading-tight">Education</span>
+                <span className={`text-lg font-bold leading-tight transition-colors ${isScrolled ? 'text-navy-900' : 'text-white'}`}>Smart Era</span>
+                <span className={`text-[10px] font-semibold tracking-widest uppercase leading-tight transition-colors ${isScrolled ? 'text-navy-500' : 'text-navy-300'}`}>Education</span>
               </div>
             </a>
 
@@ -54,7 +57,7 @@ export default function Navbar() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-navy-700 rounded-lg hover:bg-navy-50 transition-all duration-200"
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${isScrolled ? 'text-slate-600 hover:text-navy-700 hover:bg-navy-50' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                 >
                   {link.name}
                 </a>
@@ -64,14 +67,14 @@ export default function Navbar() {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href="tel:+919876543210"
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-navy-700 bg-navy-50 rounded-xl hover:bg-navy-100 transition-colors"
+                href={`tel:${primaryPhone.tel}`}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-colors ${isScrolled ? 'text-navy-700 bg-navy-50 hover:bg-navy-100' : 'text-white bg-white/10 hover:bg-white/20'}`}
               >
                 <Phone className="w-4 h-4" />
-                <span>+91 98765 43210</span>
+                <span>{primaryPhone.display}</span>
               </a>
               <a
-                href="#contact"
+                href="/#contact"
                 className="btn-shine px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-navy-800 to-navy-600 rounded-xl hover:from-navy-700 hover:to-navy-500 transition-all shadow-lg shadow-navy-500/25"
               >
                 Free Counselling
@@ -81,12 +84,14 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl hover:bg-navy-50 transition-colors"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+              className={`lg:hidden p-2 rounded-xl transition-colors ${isScrolled || isMobileMenuOpen ? 'hover:bg-navy-50' : 'hover:bg-white/10'}`}
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-navy-800" />
               ) : (
-                <Menu className="w-6 h-6 text-navy-800" />
+                <Menu className={`w-6 h-6 ${isScrolled ? 'text-navy-800' : 'text-white'}`} />
               )}
             </button>
           </div>
@@ -129,14 +134,14 @@ export default function Navbar() {
                 </div>
                 <div className="mt-8 flex flex-col gap-3">
                   <a
-                    href="tel:+919876543210"
+                    href={`tel:${primaryPhone.tel}`}
                     className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-navy-700 bg-navy-50 rounded-xl"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>+91 98765 43210</span>
+                    <span>{primaryPhone.display}</span>
                   </a>
                   <a
-                    href="#contact"
+                    href="/#contact"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-navy-800 to-navy-600 rounded-xl"
                   >

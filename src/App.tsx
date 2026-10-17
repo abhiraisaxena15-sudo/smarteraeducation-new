@@ -11,20 +11,38 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import ChatBot from './components/ChatBot';
+import LegalPage from './components/LegalPage';
+import { legalByPath } from './data/legal';
+import { normalizePath } from './lib/path';
 
-function App() {
+function App({ path }: { path: string }) {
+  const legal = legalByPath[normalizePath(path)];
+
+  if (legal) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar solid />
+        <LegalPage page={legal} />
+        <Footer />
+        <WhatsAppButton />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <Hero />
-      <AdmissionTicker />
-      <Universities />
-      <Services />
-      <Stats />
-      <Testimonials />
-      <WhyChooseUs />
-      <LeadForm />
-      <FAQ />
+      <main>
+        <Hero />
+        <AdmissionTicker />
+        <Universities />
+        <Services />
+        <Stats />
+        <Testimonials />
+        <WhyChooseUs />
+        <LeadForm />
+        <FAQ />
+      </main>
       <Footer />
       <WhatsAppButton />
       <ChatBot />

@@ -1,42 +1,27 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Send, User, Sparkles } from 'lucide-react';
+import { Bot, X, Send, User, Sparkles, MessageCircle } from 'lucide-react';
+import { whatsappLink } from '../data/site';
+import { getBotReply, quickQuestions } from '../lib/chatbot';
 
 interface Message {
   role: 'user' | 'bot';
   text: string;
 }
 
-const quickQuestions = [
-  'How to apply for admission?',
-  'What are the fees?',
-  'Scholarship options?',
-  'Top universities for MBA?',
-];
-
-const botResponses: Record<string, string> = {
-  'How to apply for admission?': 'To apply for admission, fill out the enquiry form on our website or WhatsApp us. Our counsellor will guide you through the entire process including university selection, document submission, and fee payment.',
-  'What are the fees?': 'Our counselling services have transparent pricing. The first session is FREE. Service fees vary based on the university and program. Contact us for a detailed fee structure.',
-  'Scholarship options?': 'We help students apply for merit-based scholarships (up to 100% fee waiver) and need-based financial aid at partner universities like LPU, Amity, Chandigarh University, and more.',
-  'Top universities for MBA?': 'Top MBA universities we partner with include: Amity University, LPU, Chandigarh University, Bennett University, and Jain University Bangalore. Each offers excellent placement records.',
-  'default': 'Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call us at +91 98765 43210 or fill out the enquiry form.',
-};
-
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', text: 'Hello! I am your AI admission assistant. How can I help you today?' },
+    { role: 'bot', text: 'Hi! 👋 Ask me anything about admissions — fees, universities, scholarships, online degrees or documents. Counselling is 100% free!' },
   ]);
   const [input, setInput] = useState('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Sirf chat box ke andar scroll karo (poora page nahi hilna chahiye)
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const el = listRef.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  }, [messages, isOpen]);
 
   const handleSend = (text: string) => {
     if (!text.trim()) return;
@@ -44,7 +29,7 @@ export default function ChatBot() {
     setInput('');
 
     setTimeout(() => {
-      const response = botResponses[text] || botResponses['default'];
+      const response = getBotReply(text);
       setMessages((prev) => [...prev, { role: 'bot', text: response }]);
     }, 800);
   };
@@ -58,6 +43,8 @@ export default function ChatBot() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Close admission help chat' : 'Open admission help chat'}
+        aria-expanded={isOpen}
         className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 flex items-center justify-center shadow-lg shadow-navy-500/30 hover:shadow-xl transition-shadow"
       >
         {isOpen ? (
@@ -84,17 +71,17 @@ export default function ChatBot() {
                   <Sparkles className="w-5 h-5 text-navy-300" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white">AI Admission Assistant</h4>
+                  <h4 className="text-sm font-bold text-white">Admission Help</h4>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-xs text-white/60">Online</span>
+                    <span className="text-xs text-white/60">Quick answers · Counsellors on WhatsApp</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="h-80 overflow-y-auto p-4 space-y-3 bg-slate-50">
+            <div ref={listRef} className="h-80 max-h-[45vh] overflow-y-auto p-4 space-y-3 bg-slate-50" aria-live="polite">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
@@ -115,7 +102,6 @@ export default function ChatBot() {
                   </div>
                 </div>
               ))}
-              <div ref={messagesEndRef} />
             </div>
 
             {/* Quick Questions */}
@@ -141,16 +127,28 @@ export default function ChatBot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend(input)}
+                  maxLength={200}
                   placeholder="Type your question..."
+                  aria-label="Type your question"
                   className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-navy-300 transition-colors"
                 />
                 <button
                   onClick={() => handleSend(input)}
+                  aria-label="Send message"
                   className="w-10 h-10 rounded-xl bg-navy-600 flex items-center justify-center hover:bg-navy-700 transition-colors"
                 >
                   <Send className="w-4 h-4 text-white" />
                 </button>
               </div>
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 flex items-center justify-center gap-2 py-2 text-xs font-semibold text-green-700 hover:underline"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Talk to a counsellor on WhatsApp
+              </a>
             </div>
           </motion.div>
         )}
