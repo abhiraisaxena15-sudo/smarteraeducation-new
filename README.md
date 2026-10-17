@@ -1,73 +1,32 @@
-# React + TypeScript + Vite
+# Smart Era Education — Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite + Tailwind. Live: https://smarteraeducation.in
 
-Currently, two official plugins are available:
+## Kuch badalna ho toh
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Kya badalna hai | File |
+|---|---|
+| Phone, email, address, Instagram, intake year, "5000+" | `src/data/site.ts` |
+| Universities ki list | `src/data/site.ts` → `universities` |
+| Real student reviews | `src/data/testimonials.ts` |
+| FAQ | `src/data/faqs.ts` |
+| Privacy / Terms / Disclaimer | `src/data/legal.ts` |
+| Ticker ki lines | `src/components/AdmissionTicker.tsx` |
 
-## React Compiler
+## Leads → Google Sheet
+Steps: [`google-apps-script/SETUP.md`](google-apps-script/SETUP.md).
+Jab tak Sheet URL nahi lagaya, form student ki details WhatsApp pe bhejta hai.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Commands
+```bash
+npm install
+npm run dev      # local preview
+npm run build    # production build (dist/) — har page pehle se render hota hai (SEO)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deploy (Vercel)
+Build command `npm run build`, output folder `dist`. GitHub pe push karte hi Vercel apne aap deploy karega.
+Google Sheet URL env variable se dena ho toh: `VITE_LEADS_ENDPOINT`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Deploy ke baad: [Google Search Console](https://search.google.com/search-console) mein site add karke
+`https://smarteraeducation.in/sitemap.xml` submit karo.
